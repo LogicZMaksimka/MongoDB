@@ -1,0 +1,65 @@
+show dbs
+
+use stackoverflow
+
+db
+
+db.createCollection("posts_data")
+
+
+db.posts_data.find(
+    {Title : { $regex : "MongoDB", $options : "i" }},
+    {Title: 1, Tags: 1}
+)
+
+
+db.posts_data.find(
+{
+    Score : { $gte : 1000 },
+    CreationDate : { $lte : ISODate("2009-01-01T23:59:59Z")},
+},
+{
+    Title: 1, Score: 1, CreationDate: 1
+}
+).sort({Score : -1}).limit(10)
+
+
+db.posts_data.find().explain("executionStats")
+
+
+
+db.posts_data.find(
+{
+    Title : { $regex : "MongoDB" }
+}).explain("executionStats")
+
+
+db.posts_data.find(
+{   $or:
+    [
+        { Title : { $regex : "MongoDB", $options : "i" }, },
+        { Tags : { $regex : "MongoDB", $options : "i" }, }
+    ]
+}).explain("executionStats")
+
+
+
+db.posts_data.find(
+{
+    FavoriteCount : { $gte : 1000 }
+}).explain("executionStats")
+
+
+db.posts_data.find(
+{
+    FavoriteCount : { $gte : 1000 },
+    CreationDate : { $lte : ISODate("2009-01-01T23:59:59Z")},
+}).explain("executionStats")
+
+
+db.posts_data.find(
+{
+    Title : {$regex : "{.*?}"}
+}).explain("executionStats")
+
+
